@@ -1,0 +1,6 @@
+{
+  "appId": "au.com.tally.app",
+  "appName": "Tally",
+  "webDir": "dist",
+  "server": { "androidScheme": "https" }
+}
