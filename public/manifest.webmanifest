@@ -1,0 +1,14 @@
+{
+  "name": "Tally — financial planner",
+  "short_name": "Tally",
+  "description": "Budgeting, bills, investments and net worth — on your own or together.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eaeee8",
+  "theme_color": "#2e5f50",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

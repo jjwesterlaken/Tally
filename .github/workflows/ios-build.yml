@@ -1,0 +1,50 @@
+name: Build iOS (simulator)
+
+# Builds an UNSIGNED iOS app for the iOS Simulator on a macOS runner. This lets
+# you smoke-test the iOS build in the Simulator (on a Mac) without an Apple
+# account. IMPORTANT: an unsigned simulator build CANNOT be installed on a real
+# iPhone. For on-device testing or TestFlight you need an Apple Developer account
+# and signing — see BUILD-MOBILE.md. (Workflow may need a small tweak per Xcode
+# version; it's a starting point.)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the web app
+        run: npm run build
+
+      - name: Add / sync the iOS project
+        run: |
+          if [ ! -d ios ]; then npx cap add ios; fi
+          npx cap sync ios
+
+      - name: Build for simulator (unsigned)
+        run: |
+          cd ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload simulator app
+        uses: actions/upload-artifact@v4
+        with:
+          name: tally-ios-simulator-app
+          path: ios/App/build/Build/Products/Debug-iphonesimulator/App.app
+          if-no-files-found: warn
